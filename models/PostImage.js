@@ -5,6 +5,7 @@ const PostImage=db.define('postImage',{
         type:Sequelize.DataTypes.STRING
     }
 })
+
 PostImage.associte=models=>{
     PostImage.belongsTo(models.Post)
  }

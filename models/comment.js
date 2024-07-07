@@ -8,6 +8,7 @@ const Comment=db.define('Comment',{
 Comment.associte=models=>{
     Comment.belongsTo(models.User)
     Comment.belongsTo(models.Post)
+    Comment.hasMany(models.imgComment)
 
  
  }
