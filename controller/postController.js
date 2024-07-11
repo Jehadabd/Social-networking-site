@@ -117,7 +117,7 @@ exports.updatePost = async (req, res) => {
             const newImagePaths = req.files.map(file => url + '/photo/postPhoto/' + file.filename);
             // تحديث الصور الموجودة أو إضافة الصور الجديدة
            await Promise.all(newImagePaths.map(async (imgPath) => {
-                const existingImage = await models.PostImage.findOne({
+                const existingImage = await models.PostImg.findOne({
                     where: {
                         PostId: post.id,
                         img_url: imgPath

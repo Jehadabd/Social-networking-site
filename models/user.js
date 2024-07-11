@@ -1,45 +1,44 @@
-const { Sequelize ,DataTypes} = require("sequelize")
+const { DataTypes } = require('sequelize');
+const db = require('./DB'); // استيراد الاتصال بقاعدة البيانات الخاصة بك
 
-const db=require('./DB')
-
-
-const User=db.define('user',{
-    name:{
-        type:Sequelize.DataTypes.STRING,
-        
+const User = db.define('User', {
+    name: {
+        type: DataTypes.STRING,
     },
-    email:{
-        type:Sequelize.DataTypes.STRING,
-        unique:true,
-        
+    email: {
+        type: DataTypes.STRING,
+        unique: true,
     },
-    password:{
-        type:Sequelize.DataTypes.STRING,
-        
-
+    password: {
+        type: DataTypes.STRING,
     },
-    img_uri:{
-        type:Sequelize.DataTypes.STRING
-
+    img_uri: {
+        type: DataTypes.STRING
     },
-    userName:{
-        type:Sequelize.DataTypes.STRING,
-        unique:true,
-        allowNull:false
+    userName: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
     }
+});
 
+User.associate = models => {
+    User.hasMany(models.Post);
+    User.hasMany(models.Comment);
+    User.hasMany(models.Massage, { as: 'SentMessages', foreignKey: 'senderId' });
+    User.hasMany(models.Massage, { as: 'ReceivedMessages', foreignKey: 'receiverId' });
 
-})
-
-
-db.sync({ force: false }) // تأكد من أن هذا لا يقوم بحذف الجدول إذا كان موجودًا
-    .then(() => {
-        console.log('Database & tables created!');
+    User.belongsToMany(models.User, {
+        through: models.Follower,
+        as: 'Followers',
+        foreignKey: 'followedId'
     });
-User.associte=models=>{
-    User.hasMany(models.Post)
-    User.hasMany(models.Comment)
-    User.hasMany(models.Friend)
-}
 
-module.exports=User;
+    User.belongsToMany(models.User, {
+        through: models.Follower,
+        as: 'Following',
+        foreignKey: 'followerId'
+    });
+};
+
+module.exports = User;
